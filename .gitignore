@@ -1,0 +1,9 @@
+/container/*
+!/container/Dockerfile
+
+/.direnv
+/.envrc
+/result
+/result-*
+
+/dist

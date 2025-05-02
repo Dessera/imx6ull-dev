@@ -1,0 +1,7 @@
+label: dos
+unit: sectors
+sector-size: 512
+
+1 : start=20480, size=131072, type=0xEF, bootable
+2 : start=133120, size=+, type=0x83
+
