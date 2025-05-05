@@ -6,6 +6,7 @@
 #include <linux/init.h>
 #include <linux/mod_devicetable.h>
 #include <linux/module.h>
+#include <linux/mutex_types.h>
 #include <linux/of.h>
 #include <linux/of_gpio.h>
 #include <linux/platform_device.h>
@@ -27,6 +28,8 @@ struct led_dev_priv
   struct device* dev;
   struct device_node* nd;
   int led_gpio;
+
+  struct mutex lock;
 };
 
 static dev_t led_dev_id = 0;
@@ -55,8 +58,13 @@ led_write(struct file* file, const char __user* buf, size_t cnt, loff_t* offs)
     cnt = 2;
   }
 
-  if (copy_from_user(data, buf, cnt) < 0) {
+  mutex_lock(&led_data->lock);
+
+  unsigned long res = copy_from_user(data, buf, cnt);
+  if (res < 0) {
     dev_err(led_data->dev, "failed to copy from user\n");
+
+    mutex_unlock(&led_data->lock);
     return -EFAULT;
   }
 
@@ -66,6 +74,7 @@ led_write(struct file* file, const char __user* buf, size_t cnt, loff_t* offs)
     gpio_set_value(led_data->led_gpio, LED_ON);
   }
 
+  mutex_unlock(&led_data->lock);
   return 0;
 }
 
@@ -106,6 +115,8 @@ led_probe(struct platform_device* pdev)
     err = -ENOMEM;
     goto led_priv_alloc_err;
   }
+
+  mutex_init(&led_data->lock);
 
   led_data->nd = pdev->dev.of_node;
   led_data->led_gpio = of_get_named_gpio(led_data->nd, "led-gpio", 0);
@@ -204,5 +215,5 @@ module_exit(led_exit);
 
 MODULE_AUTHOR("Dessera");
 MODULE_DESCRIPTION("I.MX6ULL (Alientek Alpha) Led controller");
-MODULE_LICENSE("MIT");
+MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.2");
