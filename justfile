@@ -17,5 +17,6 @@ rmdev-image:
 develop:
   -podman run -it --rm --privileged --name {{DEVNAME}}          \
               -v $(pwd)/container/projects:/projects            \
+              -v $(pwd)/container/vscode:/root/.vscode-server   \
               -v $(pwd)/container/usr:/usr/arm-linux-gnueabihf  \
               {{DEVIMGNAME}}:latest

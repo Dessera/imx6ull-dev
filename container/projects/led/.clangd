@@ -1,0 +1,37 @@
+CompileFlags:
+  CompilationDatabase: ./
+  Remove: [
+    -mpreferred-stack-boundary=3,
+    -mindirect-branch=thunk-extern,
+    -mindirect-branch-register,
+    -fno-allow-store-data-races,
+    -fconserve-stack,
+    -fmin-function-alignment=16,
+    -mrecord-mcount,
+    -mno-fdpic,
+    -fno-ipa-sra,
+  ]
+Diagnostics:
+  ClangTidy:
+    Add: [
+      readability-*,
+      cppcoreguidelines-*,
+      bugprone-*,
+      modernize-*,
+      performance-*,
+      misc-*
+    ]
+    Remove: [
+      bugprone-forward-declaration-namespace,
+      cppcoreguidelines-special-member-functions,
+      cppcoreguidelines-pro-type-vararg,
+      cppcoreguidelines-avoid-non-const-global-variables,
+      cppcoreguidelines-interfaces-global-init,
+      modernize-use-trailing-return-type,
+      readability-identifier-length,
+      readability-convert-member-functions-to-static,
+      misc-no-recursion,
+      performance-no-int-to-ptr,
+    ]
+InlayHints:
+  BlockEnd: true
