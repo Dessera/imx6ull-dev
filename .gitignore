@@ -3,6 +3,8 @@
 /container/vscode
 /container/projects/*
 !/container/projects/led
+!/container/projects/scripts
+!/container/projects/Makefile
 
 /.direnv
 /.envrc

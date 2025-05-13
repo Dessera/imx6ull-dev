@@ -15,7 +15,7 @@ rmdev-image:
 
 # run development container
 develop:
-  -podman run -it --rm --privileged --name {{DEVNAME}}          \
+  -podman run -dit --privileged --name {{DEVNAME}}              \
               -v $(pwd)/container/projects:/projects            \
               -v $(pwd)/container/vscode:/root/.vscode-server   \
               -v $(pwd)/container/usr:/usr/arm-linux-gnueabihf  \

@@ -1,0 +1,26 @@
+BUSYBOX_PATH = $(PROJECT_BASE_PATH)/busybox-1.36.1
+
+ifndef ARCH
+$(error ARCH is not defined)
+endif
+
+ifndef CROSS_COMPILE
+$(error CROSS_COMPILE is not defined)
+endif
+
+ifndef DIST_DIR
+$(error DIST_DIR is not defined)
+endif
+
+.PHONY: all install clean
+
+all:
+	$(HIDE)$(MAKE) -C $(BUSYBOX_PATH) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE)
+
+install: all
+	$(HIDE)mkdir -p $(ROOTFS_DIR)
+	$(HIDE)$(MAKE) -C $(BUSYBOX_PATH) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) CONFIG_PREFIX=$(ROOTFS_DIR) install
+
+clean:
+	$(HIDE)$(MAKE) -C $(BUSYBOX_PATH) clean
+	$(HIDE)rm -rf $(ROOTFS_DIR)
