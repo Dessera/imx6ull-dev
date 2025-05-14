@@ -5,19 +5,7 @@ LINUX_IMG_TARGET = zImage
 LINUX_DTB_PATH = $(LINUX_KERNEL_PATH)/arch/$(ARCH)/boot/dts/nxp/imx/imx6ull-opendos-emmc.dtb
 LINUX_IMG_PATH = $(LINUX_KERNEL_PATH)/arch/$(ARCH)/boot/zImage
 
-LINUX_INSTALL_PATH = $(DIST_DIR)/boot
-
-ifndef ARCH
-$(error ARCH is not defined)
-endif
-
-ifndef CROSS_COMPILE
-$(error CROSS_COMPILE is not defined)
-endif
-
-ifndef DIST_DIR
-$(error DIST_DIR is not defined)
-endif
+LINUX_INSTALL_PATH = $(DIST_PATH)/boot
 
 .PHONY: all install clean
 
@@ -32,4 +20,3 @@ install: all
 
 clean:
 	$(HIDE)$(MAKE) -C $(LINUX_KERNEL_PATH) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) clean
-	$(HIDE)rm -rf $(LINUX_INSTALL_PATH)

@@ -3,19 +3,7 @@ UBOOT_TARGET = u-boot-dtb.imx
 
 UBOOT_BIN_PATH = $(UBOOT_PATH)/u-boot-dtb.imx
 
-UBOOT_INSTALL_PATH = $(DIST_DIR)
-
-ifndef ARCH
-$(error ARCH is not defined)
-endif
-
-ifndef CROSS_COMPILE
-$(error CROSS_COMPILE is not defined)
-endif
-
-ifndef DIST_DIR
-$(error DIST_DIR is not defined)
-endif
+UBOOT_INSTALL_PATH = $(DIST_PATH)
 
 .PHONY: all install clean
 
@@ -28,4 +16,3 @@ install: all
 
 clean:
 	$(HIDE)$(MAKE) -C $(UBOOT_PATH) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) clean
-	$(HIDE)rm -rf $(UBOOT_INSTALL_PATH)/$(UBOOT_TARGET)
