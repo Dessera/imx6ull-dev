@@ -1,0 +1,8 @@
+::sysinit:/etc/init.d/rcS
+# console::askfirst:-/bin/sh
+console::respawn:-/bin/login
+
+::restart:/sbin/init
+::ctrlaltdel:/sbin/reboot
+::shutdown:/bin/umount -a -r
+::shutdown:/sbin/swapoff -a

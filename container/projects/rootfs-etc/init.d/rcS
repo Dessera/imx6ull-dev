@@ -1,0 +1,3 @@
+mkdir -p /dev/pts
+mount -a
+mdev -s

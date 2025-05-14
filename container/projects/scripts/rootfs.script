@@ -1,4 +1,5 @@
 BUSYBOX_PATH = $(PROJECT_BASE_PATH)/busybox-1.36.1
+BUSYBOX_ETC_PATH = $(PROJECT_BASE_PATH)/rootfs-etc
 
 ifndef ARCH
 $(error ARCH is not defined)
@@ -20,6 +21,12 @@ all:
 install: all
 	$(HIDE)mkdir -p $(ROOTFS_DIR)
 	$(HIDE)$(MAKE) -C $(BUSYBOX_PATH) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) CONFIG_PREFIX=$(ROOTFS_DIR) install
+	$(HIDE)mkdir -p $(ROOTFS_DIR)/dev $(ROOTFS_DIR)/proc $(ROOTFS_DIR)/sys \
+		$(ROOTFS_DIR)/tmp $(ROOTFS_DIR)/mnt $(ROOTFS_DIR)/etc $(ROOTFS_DIR)/root
+	$(HIDE)mkdir -p $(ROOTFS_DIR)/usr/lib
+	$(HIDE)ln -s usr/lib $(ROOTFS_DIR)/lib
+	$(HIDE)mkdir -p $(ROOTFS_DIR)/lib/modules/$(shell cat $(KVERSION_FILE))
+	$(HIDE)cp -r $(BUSYBOX_ETC_PATH)/* $(ROOTFS_DIR)/etc
 
 clean:
 	$(HIDE)$(MAKE) -C $(BUSYBOX_PATH) clean

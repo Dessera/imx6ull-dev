@@ -28,6 +28,7 @@ install: all
 	$(HIDE)mkdir -p $(LINUX_INSTALL_PATH)
 	$(HIDE)cp $(LINUX_DTB_PATH) $(LINUX_INSTALL_PATH)/$(LINUX_DTB_TARGET)
 	$(HIDE)cp $(LINUX_IMG_PATH) $(LINUX_INSTALL_PATH)/$(LINUX_IMG_TARGET)
+	$(HIDE)strings $(LINUX_KERNEL_PATH)/vmlinux | grep -m1 "Linux version" | awk '{print $$3}' > $(KVERSION_FILE)
 
 clean:
 	$(HIDE)$(MAKE) -C $(LINUX_KERNEL_PATH) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) clean
