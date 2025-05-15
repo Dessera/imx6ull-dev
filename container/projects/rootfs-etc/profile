@@ -1,3 +1,3 @@
-export LD_LIBRARY_PATH = /lib:/usr/lib
+export LD_LIBRARY_PATH=/lib:/usr/lib
 
-export PS1 = '\W \$ '
+export PS1='\W \$ '
