@@ -1,5 +1,6 @@
 UBOOT_PATH = $(PROJECT_BASE_PATH)/uboot-imx
 UBOOT_TARGET = u-boot-dtb.imx
+LOGO_BMP = $(UBOOT_PATH)/tools/logos/deslab-mini.bmp
 
 UBOOT_BIN_PATH = $(UBOOT_PATH)/u-boot-dtb.imx
 
@@ -8,7 +9,7 @@ UBOOT_INSTALL_PATH = $(DIST_PATH)
 .PHONY: all install clean
 
 all:
-	$(HIDE)$(MAKE) -C $(UBOOT_PATH) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE)
+	$(HIDE)$(MAKE) -C $(UBOOT_PATH) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) LOGO_BMP=$(LOGO_BMP)
 
 install:
 	$(HIDE)mkdir -p $(UBOOT_INSTALL_PATH)

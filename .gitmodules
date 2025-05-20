@@ -1,3 +1,6 @@
 [submodule "container/projects/linux-imx"]
 	path = container/projects/linux-imx
 	url = https://github.com/Dessera/linux-imx.git
+[submodule "container/projects/uboot-imx"]
+	path = container/projects/uboot-imx
+	url = https://github.com/Dessera/uboot-imx.git
