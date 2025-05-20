@@ -3,7 +3,7 @@
 /container/vscode
 /container/projects/*
 !/container/projects/rootfs-etc
-!/container/projects/led
+!/container/projects/drivers
 !/container/projects/scripts
 !/container/projects/Makefile
 

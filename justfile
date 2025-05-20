@@ -17,5 +17,4 @@ rmdev-image:
 develop:
   -podman run -dit --privileged --name {{DEVNAME}}              \
               -v $(pwd)/container/projects:/projects            \
-              -v $(pwd)/container/vscode:/root/.vscode-server   \
               {{DEVIMGNAME}}:latest

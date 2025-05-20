@@ -13,53 +13,54 @@ ROOTFS_PATH = $(DIST_PATH)/rootfs
 
 export PROJECT_BASE_PATH SCRIPTS_PATH HIDE ARCH CROSS_COMPILE PLATFORM DIST_PATH KERNEL_PATH ROOTFS_PATH KVERSION_FILE
 
-SCRIPTS = linux.mk			\
-					uboot.mk			\
-					rootfs.mk			\
-					libc.mk				\
-					ncurses.mk		\
-					bash.mk				\
-					rtl8188eu.mk	\
-					nl.mk					\
-					iw.mk	
+TARGETS = linux uboot busybox libc ncurses rtl8188eu libnl iw bash tslib
 
-SCRIPTS_CLEANER := $(SCRIPTS:.mk=.clean)
-SCRIPTS_INSTALLER := $(SCRIPTS:.mk=.install)
-SCRIPTS_CONFIGURE := $(SCRIPTS:.mk=.configure)
+TARGETS_MK := $(addsuffix .mk, $(TARGETS))
+TARGETS_INSTALL := $(addsuffix .install, $(TARGETS))
+TARGETS_CLEAN := $(addsuffix .clean, $(TARGETS))
+TARGETS_CONFIGURE := $(addsuffix .configure, $(TARGETS))
 
-rootfs.install: linux.install
-
-libc.install: rootfs.install
-
-ncurses.install: rootfs.install
-
-nl.install: rootfs.install
-
-iw.mk: nl.install
-
+busybox.install: linux.install
+iw.mk: libnl.install
 bash.mk: ncurses.install
+libc.install: busybox.install
+rtl8188eu.install: busybox.install
+ncurses.install: busybox.install
+libnl.install: busybox.install
+tslib.install: busybox.install
 
-.PHONY: all install clean distclean reinstall $(SCRIPTS) $(SCRIPTS_CLEANER) $(SCRIPTS_INSTALLER)
+linux.install: linux.mk
+uboot.install: uboot.mk
+busybox.install: busybox.mk
+libc.install: libc.mk
+ncurses.install: ncurses.mk
+rtl8188eu.install: rtl8188eu.mk
+libnl.install: libnl.mk
+iw.install: iw.mk
+bash.install: bash.mk
+tslib.install: tslib.mk
 
-all: $(SCRIPTS)
+.PHONY: all install clean distclean reinstall $(TARGETS) $(TARGETS_MK) $(TARGETS_INSTALL) $(TARGETS_CLEAN) $(TARGETS_CONFIGURE)
 
-install: $(SCRIPTS_INSTALLER)
+mk: $(TARGETS_MK)
 
-clean: $(SCRIPTS_CLEANER)
+install: $(TARGETS_INSTALL)
+
+clean: $(TARGETS_CLEAN)
 
 distclean:
 	rm -rf $(DIST_PATH)
 
 reinstall: distclean install
 
-$(SCRIPTS):
+$(TARGETS_MK):
 	$(HIDE)$(MAKE) -C $(SCRIPTS_PATH) -f $@ all
 
-$(SCRIPTS_INSTALLER): $(SCRIPTS)
+$(TARGETS_INSTALL):
 	$(HIDE)$(MAKE) -C $(SCRIPTS_PATH) -f $(subst .install,.mk, $@) install
 
-$(SCRIPTS_CLEANER):
+$(TARGETS_CLEAN):
 	$(HIDE)$(MAKE) -C $(SCRIPTS_PATH) -f $(subst .clean,.mk, $@) clean
 
-$(SCRIPTS_CONFIGURE):
+$(TARGETS_CONFIGURE):
 	$(HIDE)$(MAKE) -C $(SCRIPTS_PATH) -f $(subst .configure,.mk, $@) configure
