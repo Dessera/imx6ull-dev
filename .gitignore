@@ -2,6 +2,7 @@
 /container/usr
 /container/vscode
 /container/projects/*
+!/container/projects/linux-imx
 !/container/projects/rootfs-etc
 !/container/projects/drivers
 !/container/projects/scripts
