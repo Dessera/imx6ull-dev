@@ -1,4 +1,4 @@
-LINUX_DTB_TARGET = imx6ull-14x14-evk-emmc.dtb
+LINUX_DTB_TARGET = imx6ull-14x14-evk.dtb
 LINUX_IMG_TARGET = zImage
 
 LINUX_DTB_PATH = $(KERNEL_PATH)/arch/$(ARCH)/boot/dts/nxp/imx/imx6ull-opendos-emmc.dtb

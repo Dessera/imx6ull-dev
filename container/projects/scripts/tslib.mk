@@ -6,7 +6,7 @@ TSLIB_TMP_TARGET_PATH = /tmp/tslib_build
 
 configure:
 	$(HIDE)bash -c 'cd $(TSLIB_PATH) && ./configure --prefix=$(TSLIB_TMP_TARGET_PATH)	\
-		--host=$(PLATFORM) --enable-shared --enable-static'
+		--host=$(PLATFORM) --enable-shared'
 
 all:
 	$(HIDE)$(MAKE) -C $(TSLIB_PATH)

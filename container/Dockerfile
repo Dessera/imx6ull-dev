@@ -6,7 +6,8 @@ RUN apt update && apt install -y                  \
   crossbuild-essential-armhf build-essential      \
   git vim clang-tools clangd autoconf bear        \
   bison dwarves kmod bc openssl flex wget         \
-  libssl-dev libelf-dev libncurses-dev pkg-config
+  libssl-dev libelf-dev libncurses-dev pkg-config \
+  autoconf automake m4 libtool gettext cmake
 
 RUN wget -O /root/zig.tar.xz https://ziglang.org/download/0.14.0/zig-linux-x86_64-0.14.0.tar.xz
 RUN tar -xf /root/zig.tar.xz -C /root

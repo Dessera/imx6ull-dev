@@ -9,6 +9,8 @@ all:
 	@echo "libc is builtin"
 
 install:
+	$(HIDE)mkdir -p $(LIB_TARGET_PATH)
+	$(HIDE)mkdir -p $(INC_TARGET_PATH)
 	$(HIDE)cp -r $(LIB_PATH)/* $(LIB_TARGET_PATH)
 	$(HIDE)cp -r $(INC_PATH)/* $(INC_TARGET_PATH)
 

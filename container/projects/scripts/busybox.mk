@@ -12,6 +12,7 @@ install:
 	$(HIDE)mkdir -p $(ROOTFS_PATH)/dev $(ROOTFS_PATH)/proc $(ROOTFS_PATH)/sys \
 		$(ROOTFS_PATH)/tmp $(ROOTFS_PATH)/mnt $(ROOTFS_PATH)/etc $(ROOTFS_PATH)/root
 	$(HIDE)mkdir -p $(ROOTFS_PATH)/usr/lib
+	$(HIDE)mkdir -p $(ROOTFS_PATH)/var/lib $(ROOTFS_PATH)/var/lock
 	$(HIDE)ln -sf usr/lib $(ROOTFS_PATH)/lib
 	$(HIDE)mkdir -p $(ROOTFS_PATH)/lib/modules/$(shell cat $(KVERSION_FILE))
 	$(HIDE)cp -r $(BUSYBOX_ETC_PATH)/* $(ROOTFS_PATH)/etc

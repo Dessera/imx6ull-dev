@@ -1,3 +1,7 @@
 mkdir -p /dev/pts
 mount -a
 mdev -s
+
+if [ -f "/var/lib/alsa/asound.state" ]; then
+  /usr/sbin/alsactl -i /usr/share/alsa/init/00main --no-ucm restore
+fi
