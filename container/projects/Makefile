@@ -1,75 +1,87 @@
-PROJECT_BASE_PATH := $(shell pwd)
-SCRIPTS_PATH = $(PROJECT_BASE_PATH)/scripts
+PROJECT_DIR := $(shell pwd)
+SCRIPTS_DIR = $(PROJECT_DIR)/scripts
 
 HIDE = @
 ARCH = arm
-CROSS_COMPILE = arm-linux-gnueabihf-
-PLATFORM = arm-linux-gnueabihf
+HOST = arm-linux-gnueabihf
+CROSS_COMPILE = $(HOST)-
 
-DIST_PATH = $(PROJECT_BASE_PATH)/dist
-KERNEL_PATH = $(PROJECT_BASE_PATH)/linux-imx
-KVERSION_FILE = $(KERNEL_PATH)/kversion
-ROOTFS_PATH = $(DIST_PATH)/rootfs
+DIST_DIR = $(PROJECT_DIR)/dist
+ROOTFS_DIR = $(DIST_DIR)/rootfs
 
-export PROJECT_BASE_PATH SCRIPTS_PATH HIDE ARCH CROSS_COMPILE PLATFORM DIST_PATH KERNEL_PATH ROOTFS_PATH KVERSION_FILE
+KERNEL_DIR = $(PROJECT_DIR)/linux-imx
+KVERSION_PATH = $(KERNEL_DIR)/kversion
 
-TARGETS = linux uboot busybox libc ncurses rtl8188eu libnl iw bash tslib alsa_lib alsa_utils
+export PROJECT_DIR SCRIPTS_DIR HIDE ARCH CROSS_COMPILE HOST DIST_DIR KERNEL_DIR ROOTFS_DIR KVERSION_PATH
 
-TARGETS_MK := $(addsuffix .mk, $(TARGETS))
+TARGETS = linux uboot busybox libc ncurses rtl8188eu libnl iw bash tslib alsa_lib alsa_utils zlib libffi cpython
+
+TARGETS_BUILD := $(addsuffix .build, $(TARGETS))
 TARGETS_INSTALL := $(addsuffix .install, $(TARGETS))
 TARGETS_CLEAN := $(addsuffix .clean, $(TARGETS))
-TARGETS_CONFIGURE := $(addsuffix .configure, $(TARGETS))
+TARGETS_CONF := $(addsuffix .conf, $(TARGETS))
+TARGETS_OBUILD := $(addsuffix .obuild, $(TARGETS))
+TARGETS_OINSTALL := $(addsuffix .oinstall, $(TARGETS))
 
-libc.install: busybox.install
-rtl8188eu.install: busybox.install
-ncurses.install: busybox.install
-libnl.install: busybox.install
-tslib.install: busybox.install
-alsa_lib.install: busybox.install
+rtl8188eu.install: linux.build
+busybox.install: linux.build
 
-busybox.install: linux.install
-iw.mk: libnl.install
-bash.mk: ncurses.install
-alsa_utils.mk: alsa_lib.install ncurses.install libc.install
+iw.build: libnl.install
+bash.build: ncurses.install
+alsa_utils.build: alsa_lib.install ncurses.install libc.install
+cpython.build: libc.install zlib.install libffi.install
 
-linux.install: linux.mk
-uboot.install: uboot.mk
-busybox.install: busybox.mk
-libc.install: libc.mk
-ncurses.install: ncurses.mk
-rtl8188eu.install: rtl8188eu.mk
-libnl.install: libnl.mk
-iw.install: iw.mk
-bash.install: bash.mk
-tslib.install: tslib.mk
-alsa_lib.install: alsa_lib.mk
-alsa_utils.install: alsa_utils.mk
+linux.install: linux.build
+uboot.install: uboot.build
+busybox.install: busybox.build
+libc.install: libc.build
+ncurses.install: ncurses.build
+rtl8188eu.install: rtl8188eu.build
+libnl.install: libnl.build
+iw.install: iw.build
+bash.install: bash.build
+tslib.install: tslib.build
+alsa_lib.install: alsa_lib.build
+alsa_utils.install: alsa_utils.build
+zlib.install: zlib.build
+libffi.install: libffi.build
+cpython.install: cpython.build
 
-.PHONY: all install clean distclean reinstall $(TARGETS) $(TARGETS_MK) $(TARGETS_INSTALL) $(TARGETS_CLEAN) $(TARGETS_CONFIGURE)
+.PHONY: all install clean distclean reinstall $(TARGETS) $(TARGETS_BUILD) $(TARGETS_OBUILD) $(TARGETS_OINSTALL) $(TARGETS_INSTALL) $(TARGETS_CLEAN) $(TARGETS_CONF)
 
-mk: $(TARGETS_MK)
+build: $(TARGETS_BUILD)
 
 install: $(TARGETS_INSTALL)
 
 clean: $(TARGETS_CLEAN)
 
 distclean:
-	rm -rf $(DIST_PATH)
+	$(HIDE)rm -rf $(DIST_DIR)
 
-reinstall: distclean install
+reinstall:
+	$(HIDE)$(MAKE) distclean
+	$(HIDE)$(MAKE) install
 
-$(TARGETS_MK):
+$(TARGETS_BUILD):
 	$(HIDE)echo Running Phase $@
-	$(HIDE)$(MAKE) -C $(SCRIPTS_PATH) -f $@ all
+	$(HIDE)$(MAKE) -C $(SCRIPTS_DIR) -f $(subst .build,.mk, $@) build
 
 $(TARGETS_INSTALL):
 	$(HIDE)echo Running Phase $@
-	$(HIDE)$(MAKE) -C $(SCRIPTS_PATH) -f $(subst .install,.mk, $@) install
+	$(HIDE)$(MAKE) -C $(SCRIPTS_DIR) -f $(subst .install,.mk, $@) install
 
 $(TARGETS_CLEAN):
 	$(HIDE)echo Running Phase $@
-	$(HIDE)$(MAKE) -C $(SCRIPTS_PATH) -f $(subst .clean,.mk, $@) clean
+	$(HIDE)$(MAKE) -C $(SCRIPTS_DIR) -f $(subst .clean,.mk, $@) clean
 
-$(TARGETS_CONFIGURE):
+$(TARGETS_CONF):
 	$(HIDE)echo Running Phase $@
-	$(HIDE)$(MAKE) -C $(SCRIPTS_PATH) -f $(subst .configure,.mk, $@) configure
+	$(HIDE)$(MAKE) -C $(SCRIPTS_DIR) -f $(subst .conf,.mk, $@) conf
+
+$(TARGETS_OBUILD):
+	$(HIDE)echo Running Phase $@
+	$(HIDE)$(MAKE) -C $(SCRIPTS_DIR) -f $(subst .obuild,.mk, $@) build
+
+$(TARGETS_OINSTALL):
+	$(HIDE)echo Running Phase $@
+	$(HIDE)$(MAKE) -C $(SCRIPTS_DIR) -f $(subst .oinstall,.mk, $@) install

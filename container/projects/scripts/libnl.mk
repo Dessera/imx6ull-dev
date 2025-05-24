@@ -1,22 +1,22 @@
-NL_PATH = $(PROJECT_BASE_PATH)/libnl
-NL_TARGET_PATH = $(ROOTFS_PATH)
-NL_TMP_TARGET_PATH = /tmp/libnl_build
+LIBNL_DIR = $(PROJECT_DIR)/libnl
+LIBNL_TMP_DIR = /tmp/libnl_build
 
-.PHONY: configure all install clean
+.PHONY: conf build install clean
 
-configure:
-	$(HIDE)bash -c 'cd $(NL_PATH) && ./configure --prefix=$(NL_TMP_TARGET_PATH)	\
-		--host=$(PLATFORM)'
+conf:
+	$(HIDE)bash -c 'cd $(LIBNL_DIR) && ./configure --prefix=$(LIBNL_TMP_DIR) \
+		--host=$(HOST)'
 
-all:
-	$(HIDE)$(MAKE) -C $(NL_PATH)
+build:
+	$(HIDE)$(MAKE) -C $(LIBNL_DIR)
 
 install:
-	$(HIDE)rm -rf $(NL_TMP_TARGET_PATH)
-	$(HIDE)$(MAKE) -C $(NL_PATH) install
-	$(HIDE)cp -r $(NL_TMP_TARGET_PATH)/etc/* $(NL_TARGET_PATH)/etc
-	$(HIDE)rm -rf $(NL_TMP_TARGET_PATH)/etc
-	$(HIDE)cp -r $(NL_TMP_TARGET_PATH)/* $(NL_TARGET_PATH)/usr
+	$(HIDE)rm -rf $(LIBNL_TMP_DIR)
+	$(HIDE)$(MAKE) -C $(LIBNL_DIR) install
+	$(HIDE)mkdir -p $(ROOTFS_DIR)/etc $(ROOTFS_DIR)/usr
+	$(HIDE)cp -r $(LIBNL_TMP_DIR)/etc/* $(ROOTFS_DIR)/etc
+	$(HIDE)rm -rf $(LIBNL_TMP_DIR)/etc
+	$(HIDE)cp -r $(LIBNL_TMP_DIR)/* $(ROOTFS_DIR)/usr
 
 clean:
-	$(HIDE)$(MAKE) -C $(NL_PATH) clean
+	$(HIDE)$(MAKE) -C $(LIBNL_DIR) clean

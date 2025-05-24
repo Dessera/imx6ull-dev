@@ -1,19 +1,23 @@
-UBOOT_PATH = $(PROJECT_BASE_PATH)/uboot-imx
-UBOOT_TARGET = u-boot-dtb.imx
-LOGO_BMP = $(UBOOT_PATH)/tools/logos/deslab-mini.bmp
+UBOOT_DIR = $(PROJECT_DIR)/uboot-imx
+UBOOT_BIN_PATH = $(UBOOT_DIR)/u-boot-dtb.imx
+LOGO_BMP_PATH = $(UBOOT_DIR)/tools/logos/deslab-mini.bmp
+UBOOT_TARGET_PATH = $(DIST_DIR)/u-boot-dtb.imx
 
-UBOOT_BIN_PATH = $(UBOOT_PATH)/u-boot-dtb.imx
 
-UBOOT_INSTALL_PATH = $(DIST_PATH)
+.PHONY: conf build install clean
 
-.PHONY: all install clean
+conf:
+	$(HIDE)$(MAKE) -C $(UBOOT_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
+		menuconfig
 
-all:
-	$(HIDE)$(MAKE) -C $(UBOOT_PATH) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) LOGO_BMP=$(LOGO_BMP)
+build:
+	$(HIDE)$(MAKE) -C $(UBOOT_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
+		LOGO_BMP=$(LOGO_BMP_PATH)
 
 install:
-	$(HIDE)mkdir -p $(UBOOT_INSTALL_PATH)
-	$(HIDE)cp $(UBOOT_BIN_PATH) $(UBOOT_INSTALL_PATH)/$(UBOOT_TARGET)
+	$(HIDE)mkdir -p $(DIST_DIR)
+	$(HIDE)cp $(UBOOT_BIN_PATH) $(UBOOT_TARGET_PATH)
 
 clean:
-	$(HIDE)$(MAKE) -C $(UBOOT_PATH) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) clean
+	$(HIDE)$(MAKE) -C $(UBOOT_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
+		clean

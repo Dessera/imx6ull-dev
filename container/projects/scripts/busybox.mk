@@ -1,21 +1,26 @@
-BUSYBOX_PATH = $(PROJECT_BASE_PATH)/busybox-1.36.1
-BUSYBOX_ETC_PATH = $(PROJECT_BASE_PATH)/rootfs-etc
+BUSYBOX_DIR = $(PROJECT_DIR)/busybox
+BUSYBOX_ETC_DIR = $(PROJECT_DIR)/rootfs-etc
 
-.PHONY: all install clean
+BUSYBOX_DIRS = dev proc sys tmp mnt etc root usr/lib var/lib var/lock
+BUSYBOX_ABS_DIRS = $(addprefix $(ROOTFS_DIR)/,$(BUSYBOX_DIRS))
 
-all:
-	$(HIDE)$(MAKE) -C $(BUSYBOX_PATH) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE)
+.PHONY: conf build install clean
+
+conf:
+	$(HIDE)$(MAKE) -C $(BUSYBOX_DIR) ARCH=$(ARCH) \
+		CROSS_COMPILE=$(CROSS_COMPILE) menuconfig
+
+build:
+	$(HIDE)$(MAKE) -C $(BUSYBOX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE)
 
 install:
-	$(HIDE)mkdir -p $(ROOTFS_PATH)
-	$(HIDE)$(MAKE) -C $(BUSYBOX_PATH) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) CONFIG_PREFIX=$(ROOTFS_PATH) install
-	$(HIDE)mkdir -p $(ROOTFS_PATH)/dev $(ROOTFS_PATH)/proc $(ROOTFS_PATH)/sys \
-		$(ROOTFS_PATH)/tmp $(ROOTFS_PATH)/mnt $(ROOTFS_PATH)/etc $(ROOTFS_PATH)/root
-	$(HIDE)mkdir -p $(ROOTFS_PATH)/usr/lib
-	$(HIDE)mkdir -p $(ROOTFS_PATH)/var/lib $(ROOTFS_PATH)/var/lock
-	$(HIDE)ln -sf usr/lib $(ROOTFS_PATH)/lib
-	$(HIDE)mkdir -p $(ROOTFS_PATH)/lib/modules/$(shell cat $(KVERSION_FILE))
-	$(HIDE)cp -r $(BUSYBOX_ETC_PATH)/* $(ROOTFS_PATH)/etc
+	$(HIDE)mkdir -p $(ROOTFS_DIR)
+	$(HIDE)$(MAKE) -C $(BUSYBOX_DIR) ARCH=$(ARCH) \
+		CROSS_COMPILE=$(CROSS_COMPILE) CONFIG_PREFIX=$(ROOTFS_DIR) install
+	$(HIDE)mkdir -p $(BUSYBOX_ABS_DIRS)
+	$(HIDE)ln -sf usr/lib $(ROOTFS_DIR)/lib
+	$(HIDE)mkdir -p $(ROOTFS_DIR)/lib/modules/$(shell cat $(KVERSION_PATH))
+	$(HIDE)cp -r $(BUSYBOX_ETC_DIR)/* $(ROOTFS_DIR)/etc
 
 clean:
-	$(HIDE)$(MAKE) -C $(BUSYBOX_PATH) clean
+	$(HIDE)$(MAKE) -C $(BUSYBOX_DIR) clean

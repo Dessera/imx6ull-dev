@@ -1,23 +1,23 @@
-BASH_PATH = $(PROJECT_BASE_PATH)/bash-5.2.37
-BASH_TARGET_PATH = $(ROOTFS_PATH)/usr
+BASH_DIR = $(PROJECT_DIR)/bash
+BASH_TARGET_DIR = $(ROOTFS_DIR)/usr
 
-NCURSES_LINK_PATH = $(ROOTFS_PATH)/usr/lib
-NCURSES_INCLUDE_PATH = $(ROOTFS_PATH)/usr/include
+LINK_DIR = $(ROOTFS_DIR)/usr/lib
+INCLUDE_DIR = $(ROOTFS_DIR)/usr/include
 
-BASH_CFLAGS = -I$(NCURSES_INCLUDE_PATH) -L$(NCURSES_LINK_PATH)
+BASH_CFLAGS = -I$(INCLUDE_DIR) -L$(LINK_DIR)
 BASH_ENVS = CFLAGS="$(BASH_CFLAGS)"
 
-.PHONY: configure all install clean
+.PHONY: conf build install clean
 
-configure:
-	$(HIDE)bash -c 'cd $(BASH_PATH) && $(BASH_ENVS) ./configure				\
-		--prefix=$(BASH_TARGET_PATH) --host=$(PLATFORM) --with-curses'
+conf:
+	$(HIDE)bash -c 'cd $(BASH_DIR) && $(BASH_ENVS) ./configure \
+		--prefix=$(BASH_TARGET_DIR) --host=$(HOST) --with-curses'
 
-all:
-	$(HIDE)$(MAKE) -C $(BASH_PATH)
+build:
+	$(HIDE)$(MAKE) -C $(BASH_DIR)
 
 install:
-	$(HIDE)$(MAKE) -C $(BASH_PATH) install
+	$(HIDE)$(MAKE) -C $(BASH_DIR) install
 
 clean:
-	$(HIDE)$(MAKE) -C $(BASH_PATH) clean
+	$(HIDE)$(MAKE) -C $(BASH_DIR) clean

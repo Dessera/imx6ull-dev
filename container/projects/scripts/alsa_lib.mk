@@ -1,17 +1,18 @@
-ALSA_LIB_PATH = $(PROJECT_BASE_PATH)/alsa-lib
-ALSA_LIB_TARGET_PATH = $(ROOTFS_PATH)/usr
+ALSA_LIB_DIR = $(PROJECT_DIR)/alsa-lib
+ALSA_LIB_TARGET_DIR = $(ROOTFS_DIR)/usr
 
-.PHONY: configure all install clean
+.PHONY: conf build install clean
 
-configure:
-	$(HIDE)bash -c 'cd $(ALSA_LIB_PATH) && ./configure --prefix=$(ALSA_LIB_TARGET_PATH)	\
-		--host=$(PLATFORM) --with-configdir=/usr/share/alsa'
+conf:
+	$(HIDE)bash -c 'cd $(ALSA_LIB_DIR) && ./configure \
+		--prefix=$(ALSA_LIB_TARGET_DIR) --host=$(HOST) \
+		--with-configdir=/usr/share/alsa'
 
-all:
-	$(HIDE)$(MAKE) -C $(ALSA_LIB_PATH)
+build:
+	$(HIDE)$(MAKE) -C $(ALSA_LIB_DIR)
 
 install:
-	$(HIDE)$(MAKE) -C $(ALSA_LIB_PATH) install
+	$(HIDE)$(MAKE) -C $(ALSA_LIB_DIR) install
 
 clean:
-	$(HIDE)$(MAKE) -C $(ALSA_LIB_PATH) clean
+	$(HIDE)$(MAKE) -C $(ALSA_LIB_DIR) clean

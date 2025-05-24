@@ -1,17 +1,19 @@
-IW_PATH = $(PROJECT_BASE_PATH)/iw-6.9
-IW_TARGET_PATH = $(ROOTFS_PATH)/usr
+IW_DIR = $(PROJECT_DIR)/iw
+IW_TARGET_DIR = $(ROOTFS_DIR)/usr
 
-.PHONY: all install clean
+IW_CFLAGS = -I$(ROOTFS_DIR)/usr/include -O2
+IW_PKGCONFIG = PKG_CONFIG_PATH=$(ROOTFS_DIR)/usr/lib/pkgconfig pkg-config
 
-all:
-	$(HIDE)$(MAKE) -C $(IW_PATH) PREFIX=$(IW_TARGET_PATH)											\
-		CC=$(CROSS_COMPILE)-gcc CFLAGS="-I$(ROOTFS_PATH)/usr/include -O2"				\
-		PKG_CONFIG="PKG_CONFIG_PATH=$(ROOTFS_PATH)/usr/lib/pkgconfig pkg-config"
+.PHONY: build install clean
+
+build:
+	$(HIDE)$(MAKE) -C $(IW_DIR) PREFIX=$(IW_TARGET_DIR) \
+		CC=$(CROSS_COMPILE)-gcc CFLAGS="$(IW_CFLAGS)" PKG_CONFIG="$(IW_PKGCONFIG)"
 
 install:
-	$(HIDE)$(MAKE) -C $(IW_PATH) PREFIX=$(IW_TARGET_PATH)											\
-		CC=$(CROSS_COMPILE)-gcc CFLAGS="-I$(ROOTFS_PATH)/usr/include -O2"				\
-		PKG_CONFIG="PKG_CONFIG_PATH=$(ROOTFS_PATH)/usr/lib/pkgconfig pkg-config" install
+	$(HIDE)$(MAKE) -C $(IW_DIR) PREFIX=$(IW_TARGET_DIR) \
+		CC=$(CROSS_COMPILE)gcc CFLAGS="$(IW_CFLAGS)" \
+		PKG_CONFIG="$(IW_PKGCONFIG)" install
 
 clean:
-	$(HIDE)$(MAKE) -C $(IW_PATH) clean
+	$(HIDE)$(MAKE) -C $(IW_DIR) clean

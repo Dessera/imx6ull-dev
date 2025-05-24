@@ -1,13 +1,16 @@
-RTL_PATH = $(PROJECT_BASE_PATH)/rtl8188eus
-RTL_TARGET_PATH = $(RTL_PATH)/8188eu.ko
+RTL_DIR = $(PROJECT_DIR)/rtl8188eus
+RTL_KO_PATH = $(RTL_DIR)/8188eu.ko
 
-.PHONY: all install clean
+.PHONY: build install clean
 
-all:
-	$(HIDE)$(MAKE) -C $(RTL_PATH) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) KSRC=$(KERNEL_PATH)
+build:
+	$(HIDE)$(MAKE) -C $(RTL_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
+		KSRC=$(KERNEL_DIR)
 
 install:
-	$(HIDE)cp $(RTL_TARGET_PATH) $(ROOTFS_PATH)/lib/modules/$(shell cat $(KVERSION_FILE))
+	$(HIDE)mkdir -p $(ROOTFS_DIR)/usr/lib/modules/$(shell cat $(KVERSION_PATH))
+	$(HIDE)cp $(RTL_KO_PATH) $(ROOTFS_DIR)/usr/lib/modules/$(shell cat $(KVERSION_PATH))
 
 clean:
-	$(HIDE)$(MAKE) -C $(RTL_PATH) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) KSRC=$(KERNEL_PATH) clean
+	$(HIDE)$(MAKE) -C $(RTL_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
+		KSRC=$(KERNEL_DIR) clean

@@ -1,19 +1,19 @@
-ALSA_UTILS_PATH = $(PROJECT_BASE_PATH)/alsa-utils
-ALSA_UTILS_TARGET_PATH = $(ROOTFS_PATH)/usr
+ALSA_UTILS_DIR = $(PROJECT_DIR)/alsa-utils
+ALSA_UTILS_TARGET_DIR = $(ROOTFS_DIR)/usr
 
-ALSA_UTILS_ENVS = CFLAGS="-I$(ROOTFS_PATH)/usr/include -L$(ROOTFS_PATH)/lib"
+ALSA_UTILS_ENVS = CFLAGS="-I$(ROOTFS_DIR)/usr/include -L$(ROOTFS_DIR)/usr/lib"
 
-.PHONY: configure all install clean
+.PHONY: conf build install clean
 
-configure:
-	$(HIDE)bash -c 'cd $(ALSA_UTILS_PATH) && $(ALSA_UTILS_ENVS) ./configure	\
-		--host=$(PLATFORM) --prefix=$(ALSA_UTILS_TARGET_PATH)'
+conf:
+	$(HIDE)bash -c 'cd $(ALSA_UTILS_DIR) && $(ALSA_UTILS_ENVS) ./configure \
+		--host=$(HOST) --prefix=$(ALSA_UTILS_TARGET_DIR)'
 
-all:
-	$(HIDE)$(MAKE) -C $(ALSA_UTILS_PATH)
+build:
+	$(HIDE)$(MAKE) -C $(ALSA_UTILS_DIR)
 
 install:
-	$(HIDE)$(MAKE) -C $(ALSA_UTILS_PATH) install
+	$(HIDE)$(MAKE) -C $(ALSA_UTILS_DIR) install
 
 clean:
-	$(HIDE)$(MAKE) -C $(ALSA_UTILS_PATH) clean
+	$(HIDE)$(MAKE) -C $(ALSA_UTILS_DIR) clean
